@@ -18,9 +18,9 @@ https://www.microsoft.com/en-us/download/details.aspx?id=48145
 AND INSTALL THE 32 BIT (vc_redist.x86.exe) REDIST!
 
 ###Changelog
-## v0.9.1.0
+** v0.9.1.0 **
 -	Initial release!
-## v0.9.5.0
+** v0.9.5.0 **
 -	Fixed the game not rendering correctly on resolution change
 -	Fixed the background not drawing properly in the shop, some dialog
 	screens, and other random places
