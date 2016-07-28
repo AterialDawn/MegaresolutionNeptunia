@@ -14,7 +14,7 @@
 using namespace std;
 
 ID3D11Device_Wrapper::ID3D11Device_Wrapper(ID3D11Device **ppID3D11Device, IDXGISwapChain_Wrapper* swapWrap) {
-	Logger::Log("ID3D11Device_Wrapper created");
+	Logger::Log("ID3D11Device_Wrapper created", Logger::Verbosity::Normal);
 	pWrapped = *ppID3D11Device;
 	pSwapChainWrapper = swapWrap;
 	*ppID3D11Device = this;
@@ -41,7 +41,7 @@ HRESULT APIENTRY ID3D11Device_Wrapper::CreateTexture1D(const D3D11_TEXTURE1D_DES
 }
 
 HRESULT APIENTRY ID3D11Device_Wrapper::CreateTexture2D(const D3D11_TEXTURE2D_DESC *pDesc, const D3D11_SUBRESOURCE_DATA *pInitialData, ID3D11Texture2D **ppTexture2D) {
-#if DEBUG
+#if _DEBUG
 	//Log some useful texture creation information on a debug build only
 	if (pDesc->BindFlags & D3D11_BIND_RENDER_TARGET)
 	{
@@ -50,7 +50,7 @@ HRESULT APIENTRY ID3D11Device_Wrapper::CreateTexture2D(const D3D11_TEXTURE2D_DES
 		message << "width = " << pDesc->Width << ", ";
 		message << "height = " << pDesc->Height << ", ";
 		message << "format = " << pDesc->Format;
-		Logger::Log(message.str());
+		Logger::Log(message.str(), Logger::Verbosity::Debug);
 	}
 	else if (pDesc->Width == static_cast<UINT>(RenderInfo::GetRenderWidth()) && pDesc->Height == static_cast<UINT>(RenderInfo::GetRenderHeight()))
 	{
@@ -59,7 +59,7 @@ HRESULT APIENTRY ID3D11Device_Wrapper::CreateTexture2D(const D3D11_TEXTURE2D_DES
 		message << "width = " << pDesc->Width << ", ";
 		message << "height = " << pDesc->Height << ", ";
 		message << "format = " << pDesc->Format;
-		Logger::Log(message.str());
+		Logger::Log(message.str(), Logger::Verbosity::Debug);
 	}
 #endif
 	UINT override_width = pDesc->Width;
@@ -70,18 +70,18 @@ HRESULT APIENTRY ID3D11Device_Wrapper::CreateTexture2D(const D3D11_TEXTURE2D_DES
 	//Render textures are 1920x1080, 1 of 3 formats, are not D3D11_USAGE_DYNAMIC, and do not have any initial data
 	if (pDesc->Width == static_cast<UINT>(RenderInfo::GetRenderWidth()) && pDesc->Height == static_cast<UINT>(RenderInfo::GetRenderHeight()) && (pDesc->Format == DXGI_FORMAT_R8G8B8A8_UNORM || pDesc->Format == DXGI_FORMAT_D32_FLOAT || pDesc->Format == DXGI_FORMAT_R32_FLOAT) && pDesc->Usage != D3D11_USAGE_DYNAMIC && pInitialData == nullptr)
 	{
-#if DEBUG
+#if _DEBUG
 		if (pDesc->Format == DXGI_FORMAT_D32_FLOAT)
 		{
-			Logger::Log("Got a depth render texture.");
+			Logger::Log("Got a depth render texture.", Logger::Verbosity::Debug);
 		}
 		else if (pDesc->Format == DXGI_FORMAT_R32_FLOAT)
 		{
-			Logger::Log("Got a R32_FLOAT (effects) texture.");
+			Logger::Log("Got a R32_FLOAT (effects) texture.", Logger::Verbosity::Debug);
 		}
 		else
 		{
-			Logger::Log("Got a main render texture.");
+			Logger::Log("Got a main render texture.", Logger::Verbosity::Debug);
 		}
 #endif
 		//Main render texture
@@ -90,28 +90,28 @@ HRESULT APIENTRY ID3D11Device_Wrapper::CreateTexture2D(const D3D11_TEXTURE2D_DES
 	}
 	else if (pDesc->Width == 960 && pDesc->Height == 540 && pDesc->Format == DXGI_FORMAT_R8G8B8A8_UNORM && pDesc->BindFlags == (D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET))
 	{
-		Logger::Log("Got the first downscaled render texture.");
+		Logger::Log("Got the first downscaled render texture.", Logger::Verbosity::Normal);
 		//First downscaled texture used for the bloom effect
 		override_width = static_cast<UINT>(pDesc->Width * RenderInfo::GetWidthScalar());
 		override_height = static_cast<UINT>(pDesc->Height * RenderInfo::GetHeightScalar());
 	}
 	else if (pDesc->Width == 480 && pDesc->Height == 270 && pDesc->Format == DXGI_FORMAT_R8G8B8A8_UNORM && pDesc->BindFlags == (D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET))
 	{
-		Logger::Log("Got the second downscaled render texture.");
+		Logger::Log("Got the second downscaled render texture.", Logger::Verbosity::Normal);
 		//We got the secondary render texture used for the bloom effect
 		override_width = static_cast<UINT>(pDesc->Width * RenderInfo::GetWidthScalar());
 		override_height = static_cast<UINT>(pDesc->Height * RenderInfo::GetHeightScalar());
 	}
 	else if (pDesc->Width == 256 && pDesc->Height == 146 && pDesc->Format == DXGI_FORMAT_R32G32B32A32_FLOAT)
 	{
-		Logger::Log("Got a primary bloom texture");
+		Logger::Log("Got a primary bloom texture", Logger::Verbosity::Normal);
 		//We got the primary bloom texture
 		override_width = static_cast<UINT>(pDesc->Width * RenderInfo::GetBloomScalar());
 		override_height = static_cast<UINT>(pDesc->Height * RenderInfo::GetBloomScalar());
 	}
 	else if (pDesc->Width == 128 && pDesc->Height == 72 && pDesc->Format == DXGI_FORMAT_R32G32B32A32_FLOAT)
 	{
-		Logger::Log("Got a secondary bloom texture");
+		Logger::Log("Got a secondary bloom texture", Logger::Verbosity::Normal);
 		//We got the secondary bloom texture
 		override_width = static_cast<UINT>(pDesc->Width * RenderInfo::GetBloomScalar());
 		override_height = static_cast<UINT>(pDesc->Height * RenderInfo::GetBloomScalar());
@@ -131,11 +131,11 @@ HRESULT APIENTRY ID3D11Device_Wrapper::CreateTexture2D(const D3D11_TEXTURE2D_DES
 		overridden_desc.Usage = pDesc->Usage;
 		overridden_desc.Width = override_width;
 
-#if DEBUG
+#if _DEBUG
 		std::stringstream sS;
 		sS << "OverrideWidth = " << override_width;
 		sS << ", OverrideHeight = " << override_height;
-		Logger::Log(sS.str());
+		Logger::Log(sS.str(), Logger::Verbosity::Debug);
 #endif
 
 		return pWrapped->CreateTexture2D(&overridden_desc, pInitialData, ppTexture2D);
@@ -158,16 +158,8 @@ HRESULT APIENTRY ID3D11Device_Wrapper::CreateUnorderedAccessView(ID3D11Resource 
 HRESULT APIENTRY ID3D11Device_Wrapper::CreateRenderTargetView(ID3D11Resource *pResource, const D3D11_RENDER_TARGET_VIEW_DESC *pDesc, ID3D11RenderTargetView **ppRTView) {
 	if (!pBackBufferRenderTarget && pResource == pSwapChainWrapper->pBackbufferTex)
 	{
-		if (bufferCalls == 0)
-		{
-			bufferCalls++;
-			Logger::Log("Skipping first CreateRenderTargetView for backbuffer");
-			return pWrapped->CreateRenderTargetView(pResource, pDesc, ppRTView);
-			//The reason I ignore the first CreateRenderTarget view for the backbuffer is the game resizes the backbuffer to 1920x1080 regardless of the default
-			//This explains the hefty performance requirements for this game.
-		}
 		//Got the backbuffer rendertarget that we use to determine if the viewport should be scaled or not
-		Logger::Log("Got the backbuffer RenderTargetView");
+		Logger::Log("Got the backbuffer RenderTargetView", Logger::Verbosity::Normal);
 		HRESULT retVal = pWrapped->CreateRenderTargetView(pResource, pDesc, ppRTView);
 		pBackBufferRenderTarget = *ppRTView;
 		return retVal;

@@ -3,7 +3,12 @@
 #include "resource.h"
 #include "Log.h"
 #include <iostream>
+#include <string>
 #include "INIReader.h"
+
+#define SETTINGS_FILE_VERSION 1
+
+using namespace std;
 
 HMODULE thisModule = NULL;
 
@@ -47,6 +52,10 @@ void LoadConfig() {
 	}
 	OutputDebugString(L"Config loaded!");
 
+	if (configReader.GetInteger("General", "SettingsVersion", 0) != SETTINGS_FILE_VERSION) {
+		ExtractConfig(true); //Force extract the config, but use defaults internally
+	}
+
 	float scaledWidth = static_cast<float>(configReader.GetReal("Render", "ScaledWidth", 1920.0));
 	float scaledHeight = static_cast<float>(configReader.GetReal("Render", "ScaledHeight", 1080.0));
 	float bloomScalar = static_cast<float>(configReader.GetReal("Extra", "BloomTextureScalar", 0.0));
@@ -54,4 +63,9 @@ void LoadConfig() {
 	RenderInfo::SetUpscaledRenderSize(scaledWidth, scaledHeight);
 	RenderInfo::SetBloomTextureScalar(bloomScalar);
 	Logger::logDisabled = !configReader.GetBoolean("Debug", "Log", false);
+	string logLevel = configReader.Get("Debug", "LogLevel", "Always");
+
+	if (!logLevel.compare("Normal")) Logger::SetVerbosity(Logger::Verbosity::Normal);
+	else if (!logLevel.compare("Debug")) Logger::SetVerbosity(Logger::Verbosity::Debug);
+	else Logger::SetVerbosity(Logger::Verbosity::Always);
 }

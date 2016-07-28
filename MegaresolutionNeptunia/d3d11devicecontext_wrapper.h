@@ -14,6 +14,7 @@ interface ID3D11DeviceContext_Wrapper : public ID3D11DeviceContext {
 	ID3D11Device_Wrapper* pDeviceWrapper;
 	bool scaleViewport = true;
 	bool justPresented = false;
+	bool aboutToClearBackbuffer = false;
 	
 	void OnPresentCallback();
 public:

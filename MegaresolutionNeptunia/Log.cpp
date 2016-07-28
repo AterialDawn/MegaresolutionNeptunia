@@ -5,11 +5,21 @@
 using namespace std;
 
 bool Logger::logDisabled = true;
+Logger::Verbosity Logger::logVerbosity = Verbosity::Normal;
 HANDLE Logger::logFile = nullptr;
 
 static string lineEnd("\r\n");
 
 Logger::Logger() {
+}
+
+void Logger::SetVerbosity(Verbosity newVerbosity) {
+	logVerbosity = newVerbosity;
+}
+
+bool Logger::CanLog(Verbosity desiredVerbosity) {
+	if (logDisabled) return false;
+	return logVerbosity <= desiredVerbosity;
 }
 
 bool Logger::InitLog(wstring fileName) {
@@ -21,9 +31,9 @@ bool Logger::InitLog(wstring fileName) {
 	return TRUE;
 }
 
-void Logger::Log(string message) {
+void Logger::Log(string message, Verbosity logVerbosity) {
 	if (logDisabled) return;
-
+	if (!CanLog(logVerbosity)) return;
 	DWORD len = 0;
 	string fMessage = message + lineEnd;
 	WriteFile(logFile, fMessage.c_str(), fMessage.length(), &len, NULL);

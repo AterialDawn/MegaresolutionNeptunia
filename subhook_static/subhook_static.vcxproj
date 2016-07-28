@@ -127,9 +127,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="subhook.c" />
     <ClCompile Include="subhook_linux.c" />
     <ClCompile Include="subhook_windows.c" />
@@ -138,6 +135,9 @@
   <ItemGroup>
     <ClInclude Include="subhook.h" />
     <ClInclude Include="subhook_private.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -30,7 +30,7 @@ HRESULT __stdcall hooked_D3D11CreateDeviceAndSwapChain(
 	ID3D11DeviceContext** ppImmediateContext)
 {
 	//SICKNASTY D3D11CreateDeviceAndSwapChain HOOK WOOP WOOP
-	Logger::Log("D3D11CreateDeviceAndSwapChain called!");
+	Logger::Log("D3D11CreateDeviceAndSwapChain called!", Logger::Verbosity::Always);
 	
 	subhook_remove(deviceHook); //Remove hook for this function call
 	HRESULT retVal = originalCreateDevice(pAdapter, driverType, software, flags, pFeatureLevels, featureLevels, sdkVersion, pSwapChainDesc, ppSwapChain, ppDevice, pFeatureLevel, ppImmediateContext);
@@ -43,23 +43,23 @@ HRESULT __stdcall hooked_D3D11CreateDeviceAndSwapChain(
 
 void HookDxgi()
 {
-	Logger::Log("Hooking d3d11 D3D11CreateDeviceAndSwapChain");
+	Logger::Log("Hooking d3d11 D3D11CreateDeviceAndSwapChain", Logger::Verbosity::Always);
 
 	HMODULE d3d11Mod = GetModuleHandle(TEXT("d3d11")); //d3d11 dll
 	originalCreateDevice = (D3D11CreateDeviceAndSwapChain_t)GetProcAddress(d3d11Mod, "D3D11CreateDeviceAndSwapChain");
 	if (!originalCreateDevice)
 	{
-		Logger::Log("originalCreateDevice is null! aborting hook!");
+		Logger::Log("originalCreateDevice is null! aborting hook!", Logger::Verbosity::Always);
 		return;
 	}
 
 	deviceHook = subhook_new((void*)originalCreateDevice, (void*)hooked_D3D11CreateDeviceAndSwapChain, (subhook_options_t)0);
 	if (!deviceHook)
 	{
-		Logger::Log("deviceHook is null!");
+		Logger::Log("deviceHook is null!", Logger::Verbosity::Always);
 		return;
 	}
 
 	subhook_install(deviceHook);
-	Logger::Log("D3d11CreateDeviceAndSwapChain hooked!");
+	Logger::Log("D3d11CreateDeviceAndSwapChain hooked!", Logger::Verbosity::Always);
 }

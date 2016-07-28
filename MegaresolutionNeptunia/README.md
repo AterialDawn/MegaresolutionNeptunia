@@ -12,5 +12,15 @@ run the game again, but this time at your desired resolution!
 
 Running the game in Fullscreen or Borderless Fullscreen might be necessary.
 
+IF YOU GET AN ERROR RELATING TO MSVCP140.dll, PLEASE DOWNLOAD THE
+VISUAL C++ REDISTRIBUTABLE FOR VISUAL STUDIO 2015 AT
+https://www.microsoft.com/en-us/download/details.aspx?id=48145
+AND INSTALL THE 32 BIT (vc_redist.x86.exe) REDIST!
+
 ###Changelog
-v0.9.1.0 : Initial commit!
+v0.9.1.0
+-	Initial release!
+v0.9.5.0
+-	Fixed the game not rendering correctly on resolution change
+-	Fixed the background not drawing properly in the shop, some dialog
+	screens, and other random places

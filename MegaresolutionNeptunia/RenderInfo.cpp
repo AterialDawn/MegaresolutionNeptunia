@@ -26,10 +26,13 @@ void RenderInfo::SetOriginalRenderSize(float originalWidth, float originalHeight
 	o_w = originalWidth;
 	o_h = originalHeight;
 
-	stringstream sS;
-	sS << "SetOriginalRenderSize W = " << o_w;
-	sS << ", H = " << o_h;
-	Logger::Log(sS.str());
+	if (Logger::CanLog(Logger::Verbosity::Normal))
+	{
+		stringstream sS;
+		sS << "SetOriginalRenderSize W = " << o_w;
+		sS << ", H = " << o_h;
+		Logger::Log(sS.str(), Logger::Verbosity::Normal);
+	}
 
 	UpdateScalars();
 }
@@ -37,11 +40,14 @@ void RenderInfo::SetOriginalRenderSize(float originalWidth, float originalHeight
 void RenderInfo::SetUpscaledRenderSize(float upscaledWidth, float upscaledHeight) {
 	u_w = upscaledWidth;
 	u_h = upscaledHeight;
-
-	stringstream sS;
-	sS << "SetUpscaledRenderSize W = " << u_w;
-	sS << ", H = " << u_h;
-	Logger::Log(sS.str());
+	
+	if (Logger::CanLog(Logger::Verbosity::Normal))
+	{
+		stringstream sS;
+		sS << "SetUpscaledRenderSize W = " << u_w;
+		sS << ", H = " << u_h;
+		Logger::Log(sS.str(), Logger::Verbosity::Normal);
+	}
 
 	UpdateScalars();
 }
@@ -49,9 +55,12 @@ void RenderInfo::SetUpscaledRenderSize(float upscaledWidth, float upscaledHeight
 void RenderInfo::SetBloomTextureScalar(float newScalar) {
 	bloom_s = newScalar;
 
-	stringstream sS;
-	sS << "SetBloomTextureScalar = " << bloom_s;
-	Logger::Log(sS.str());
+	if (Logger::CanLog(Logger::Verbosity::Normal))
+	{
+		stringstream sS;
+		sS << "SetBloomTextureScalar = " << bloom_s;
+		Logger::Log(sS.str(), Logger::Verbosity::Normal);
+	}
 }
 
 float RenderInfo::GetBloomScalar() {
@@ -62,10 +71,13 @@ void RenderInfo::UpdateScalars() {
 	u_wS = u_w / o_w;
 	u_hS = u_h / o_h;
 
-	stringstream sS;
-	sS << "UpdateScalars WScalar = " << u_wS;
-	sS << ", HScalar = " << u_hS;
-	Logger::Log(sS.str());
+	if (Logger::CanLog(Logger::Verbosity::Normal))
+	{
+		stringstream sS;
+		sS << "UpdateScalars WScalar = " << u_wS;
+		sS << ", HScalar = " << u_hS;
+		Logger::Log(sS.str(), Logger::Verbosity::Normal);
+	}
 }
 
 float RenderInfo::GetRenderWidth() {

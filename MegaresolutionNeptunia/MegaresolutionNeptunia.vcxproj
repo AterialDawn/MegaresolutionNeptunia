@@ -160,9 +160,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Config.h" />
     <ClInclude Include="d3d11device_wrapper.h" />
     <ClInclude Include="d3d11devicecontext_wrapper.h" />
@@ -206,6 +203,7 @@
     <None Include="..\Release\dinput8.dll" />
     <None Include="MegaresolutionNeptunia.def" />
     <None Include="MegaresolutionNeptunia.ini" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MegaresolutionNeptunia.rc" />

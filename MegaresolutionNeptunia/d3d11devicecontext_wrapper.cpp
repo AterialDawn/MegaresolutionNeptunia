@@ -11,7 +11,7 @@
 #include <functional>
 
 ID3D11DeviceContext_Wrapper::ID3D11DeviceContext_Wrapper(ID3D11DeviceContext **ppID3D11DeviceContext, ID3D11Device_Wrapper* pDevWrapper) {
-	Logger::Log("ID3D11DeviceContext_Wrapper created");
+	Logger::Log("ID3D11DeviceContext_Wrapper created", Logger::Verbosity::Normal);
 	pWrapped = *ppID3D11DeviceContext;
 	pDeviceWrapper = pDevWrapper;
 	*ppID3D11DeviceContext = this;
@@ -156,6 +156,7 @@ void APIENTRY ID3D11DeviceContext_Wrapper::OMSetRenderTargets(UINT NumViews, ID3
 	{
 		//Ignore the first OMSetRenderTargets call after present was just called, since the first call to this function is used to clear the backbuffer.
 		justPresented = false;
+		aboutToClearBackbuffer = true; //The first thing the game does after a present is always OMSetRenderTargets to backbuffer, and then ClearRenderTargetView
 	}
 	else if (ppRenderTargetViews && (*ppRenderTargetViews) == pDeviceWrapper->pBackBufferRenderTarget)
 	{
@@ -224,7 +225,7 @@ void APIENTRY ID3D11DeviceContext_Wrapper::RSSetViewports(UINT NumViewports, con
 			}
 			else
 			{
-				scaleViewport = TRUE;
+				scaleViewport = true;
 				return pWrapped->RSSetViewports(NumViewports, pViewports); //Don't scale the backbuffer viewport
 			}
 		}
@@ -300,6 +301,12 @@ void APIENTRY ID3D11DeviceContext_Wrapper::CopyStructureCount(ID3D11Buffer *pDst
 }
 
 void APIENTRY ID3D11DeviceContext_Wrapper::ClearRenderTargetView(ID3D11RenderTargetView *pRenderTargetView, const FLOAT ColorRGBA[4]) {
+	if (aboutToClearBackbuffer)
+	{
+		//Fixing background not scaling on resolutions that aren't 1080p
+		aboutToClearBackbuffer = false;
+		scaleViewport = true;
+	}
 	return pWrapped->ClearRenderTargetView(pRenderTargetView, ColorRGBA);
 }
 

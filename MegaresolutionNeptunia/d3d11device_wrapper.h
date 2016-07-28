@@ -12,8 +12,6 @@
 interface ID3D11Device_Wrapper : public ID3D11Device {
 	ID3D11Device *pWrapped;
 	IDXGISwapChain_Wrapper* pSwapChainWrapper = nullptr;
-	UINT skippedTextures = 0;
-	UINT bufferCalls = 0;
 	ID3D11RenderTargetView* pBackBufferRenderTarget = nullptr;
 
 public:

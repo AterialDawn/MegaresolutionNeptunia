@@ -54,9 +54,12 @@ HRESULT APIENTRY IDXGISwapChain_Wrapper::GetBuffer(UINT Buffer, REFIID riid, voi
 	{
 		HRESULT retVal = pWrapped->GetBuffer(Buffer, riid, ppSurface);
 		pBackbufferTex = (ID3D11Texture2D*)(*ppSurface);
-		stringstream sS;
-		sS << "GetBuffer backBuffer, replacing currently stored surface pointer with " << (pBackbufferTex);
-		Logger::Log(sS.str());
+		if (Logger::CanLog(Logger::Verbosity::Normal))
+		{
+			stringstream sS;
+			sS << "GetBuffer backBuffer, replacing currently stored surface pointer with " << (pBackbufferTex);
+			Logger::Log(sS.str(), Logger::Verbosity::Normal);
+		}
 		return retVal;
 	}
 	return pWrapped->GetBuffer(Buffer, riid, ppSurface);
