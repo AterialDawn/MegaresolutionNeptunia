@@ -156,7 +156,7 @@ HRESULT APIENTRY ID3D11Device_Wrapper::CreateUnorderedAccessView(ID3D11Resource 
 }
 
 HRESULT APIENTRY ID3D11Device_Wrapper::CreateRenderTargetView(ID3D11Resource *pResource, const D3D11_RENDER_TARGET_VIEW_DESC *pDesc, ID3D11RenderTargetView **ppRTView) {
-	if (!pBackBufferRenderTarget && pResource == pSwapChainWrapper->pBackbufferTex)
+	if (pResource == pSwapChainWrapper->pBackbufferTex)
 	{
 		//Got the backbuffer rendertarget that we use to determine if the viewport should be scaled or not
 		Logger::Log("Got the backbuffer RenderTargetView", Logger::Verbosity::Normal);
