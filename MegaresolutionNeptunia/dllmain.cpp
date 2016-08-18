@@ -1,5 +1,5 @@
 #define DIRECTINPUT_VERSION 0x0800
-#include "dinput.h"
+#include <dinput.h>
 #include "DxgiHook.h"
 #include "Log.h"
 #include "Config.h"
